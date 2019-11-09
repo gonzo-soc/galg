@@ -46,6 +46,31 @@ def binarySearch_SORT_GALG(sort_array, wanted, left, right):
     elif sort_array[mi] == wanted:
         return mi
 
+def search_value_more_than(search_array, wanted, left, right):
+    '''
+    Search the least element in the list that bigger than wanted
+    '''
+
+    if right == left:
+        if wanted < search_array[left]:
+            return search_array[left]
+        else:
+            return None
+
+    if right - left == 1 and right == len(search_array) - 1:
+        if wanted < search_array[left]:
+            return search_array[left]
+        elif wanted < search_array[right]:
+            return search_array[right]
+        else:
+            return None
+
+    medium = int((left + right)/2)
+    if search_array[medium] > wanted:
+        return search_count_less_than(search_array, wanted, left, medium)
+    elif search_array[medium] < wanted:
+        return search_count_less_than(search_array, wanted, medium, right)
+
 
 def main_SORT_GALG():
     # test insertion sort
