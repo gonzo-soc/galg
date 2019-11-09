@@ -99,7 +99,7 @@ def minimumBribes(in_array):
                     kleptocrat_map.setdefault(j, 0)
 
             elif in_array[i] - in_array[i - 1] == 1:
-                kleptocrat_map.setdefault(i, 0)
+                kleptocrat_map.setdefault(in_array[i], 0)
 
             kleptocrat_map[in_array[i]] = 1
         elif po_v and in_array[i] > po_v:
