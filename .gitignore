@@ -3,5 +3,6 @@
 *.swp
 *.private
 *.key
+*pycache*
 .DS_Store
 tmp

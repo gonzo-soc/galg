@@ -1,18 +1,15 @@
-#!/usr/bin/env python3.7
+#! /usr/bin/env python3.7
 
 '''
-Chapter 04 - 2. Merge sort implementation (O(n * log(n)))
+Chapter 04 - 1. Merge sort implementation (O(n * log(n)))
 '''
 
 
-def merge_sort_SORT_GALG(in_array, left, right):
+def merge_sort(in_array, left, right):
     if len(in_array) == 1:
         return in_array
 
-    me = int((left + right)/2)
-
-    # print(f"\nDebug merge_sort_SORT_GALG me {me}, left {left}, right {right}")
-    # print(f"\nDebug merge_sort_SORT_GALG in_array {in_array}")
+    me = int((left + right) / 2)
 
     left_array = []
     right_array = []
@@ -20,36 +17,21 @@ def merge_sort_SORT_GALG(in_array, left, right):
     if left == me:
         left_array.append(in_array[left])
     elif me - left == 1:
+        left_array = in_array[left:me + 1]
         if in_array[left] > in_array[me]:
-            swap_SORT_GALG(in_array, left, me)
-        left_array = in_array[left:me+1]
-    # print(f"\nDebug merge_sort_SORT_GALG left_array {left_array}")
+            left_array[0:1], left_array[1:] = left_array[1:], left_array[0:1]
 
     if right == me + 1:
         right_array.append(in_array[right])
-    elif right - me - 1 == 1:
-        if in_array[me + 1] > in_array[right]:
-            swap_SORT_GALG(in_array, me + 1, right)
-        right_array = in_array[me + 1:right + 1]
-
-    # print(f"\nDebug merge_sort_SORT_GALG right_array {right_array}")
 
     if me - left < 2:
-        return merge_SORT_GALG(left_array, right_array)
+        return merge(left_array, right_array)
 
-    return merge_SORT_GALG(merge_sort_SORT_GALG(in_array, left, me), merge_sort_SORT_GALG(in_array, me + 1, right))
-
-
-def swap_SORT_GALG(in_array, left, right):
-    temp = in_array[right]
-    in_array[right] = in_array[left]
-    in_array[left] = temp
-    return True
+    return merge(merge_sort(in_array, left, me),
+                 merge_sort(in_array, me + 1, right))
 
 
-def merge_SORT_GALG(left_array, right_array):
-    # print(f"\nDebug merge sort: left_array {left_array} right_array {right_array}\n")
-
+def merge(left_array, right_array):
     left_len = len(left_array)
     right_len = len(right_array)
     if left_len > 0 and right_len == 0:
@@ -57,161 +39,108 @@ def merge_SORT_GALG(left_array, right_array):
     elif right_len > 0 and left_len == 0:
         return right_array
 
+    # merge left and right in merged_cut,
+    k = 0
+    m = 0
     merged_array = []
-    i = 0
-    j = 0
-    while i < left_len or j < right_len:
-        if i < left_len and j >= right_len:
-            merged_array.append(left_array[i])
-            i += 1
-        elif j < right_len and i >= left_len:
-            merged_array.append(right_array[j])
-            j += 1
-        elif i < left_len and left_array[i] <= right_array[j]:
-            merged_array.append(left_array[i])
-            if left_array[i] == right_array[j]:
-                merged_array.append(right_array[j])
-                j += 1
-            i += 1
-        elif j < right_len:
-            merged_array.append(right_array[j])
-            j += 1
+    left_len = len(left_array)
+    right_len = len(right_array)
+    while k < left_len or m < right_len:
+        if k < left_len and ((m < right_len and left_array[k] <= right_array[m]) or m >= right_len):
+            merged_array.append(left_array[k])
+            k += 1
+        elif m < right_len:
+            merged_array.append(right_array[m])
+            m += 1
 
     return merged_array
 
 
-print('Debug merge sort: Test 001 \n')
-print('-' * 80)
-in_array = [1]
-print('\nDebug: Primary array\n')
-print(in_array)
+if __name__ == "__main__":
+    print('\nDebug merge sort: Test 008 \n')
+    print('-' * 80)
+    in_array = [10, 3, 2, -1, 0, 4]
+    print('\nDebug: Primary array\n')
+    print(in_array)
 
-right = len(in_array)
-left = 0
+    s_array = merge_sort(in_array, 0, len(in_array) - 1)
+    print('\n Debug sorted array: ')
+    for v in s_array:
+        print(v)
 
-print('-' * 80)
-print('\nDebug: Sorted array\n')
-print(merge_sort_SORT_GALG(in_array, left, right))
+    print('Debug merge sort: Test 003 \n')
+    print('-' * 80)
+    in_array = [2, 1, -1, 0, -100]
+    print('\nDebug: Primary array\n')
+    print(in_array)
 
+    s_array = merge_sort(in_array, 0, len(in_array) - 1)
+    print('\n Debug sorted array: ')
+    for v in s_array:
+        print(v)
 
-print('\nDebug merge sort: Test 002 \n')
-print('-' * 80)
-in_array = [2, 1]
-print('\nDebug: Primary array\n')
-print(in_array)
+    print('Debug merge sort: Test 001 \n')
+    print('-' * 80)
+    in_array = [1]
+    print('\nDebug: Primary array\n')
+    print(in_array)
 
-right = len(in_array) - 1
-left = 0
+    s_array = merge_sort(in_array, 0, len(in_array) - 1)
+    print('\n Debug sorted array: ')
+    for v in s_array:
+        print(v)
 
-print('-' * 80)
-print('\nDebug: Sorted array\n')
-print(merge_sort_SORT_GALG(in_array, left, right))
+    print('Debug merge sort: Test 002 \n')
+    print('-' * 80)
+    in_array = [2, 1, -1]
+    print('\nDebug: Primary array\n')
+    print(in_array)
 
+    s_array = merge_sort(in_array, 0, len(in_array) - 1)
+    print('\n Debug sorted array: ')
+    for v in s_array:
+        print(v)
 
-print('\nDebug merge sort: Test 003 \n')
-print('-' * 80)
-in_array = [3, 2, 1]
-print('\nDebug: Primary array\n')
-print(in_array)
+    print('\nDebug merge sort: Test 006 \n')
+    print('-' * 80)
+    in_array = [4, 3, 2, 1, 0]
+    print('\nDebug: Primary array\n')
+    print(in_array)
 
-right = len(in_array) - 1
-left = 0
+    s_array = merge_sort(in_array, 0, len(in_array) - 1)
+    print('\n Debug sorted array: ')
+    for v in s_array:
+        print(v)
 
-print('-' * 80)
-print('\nDebug: Sorted array\n')
-print(merge_sort_SORT_GALG(in_array, left, right))
+    print('\nDebug merge sort: Test 007 \n')
+    print('-' * 80)
+    in_array = [1, 2, 3, 4, 5]
+    print('\nDebug: Primary array\n')
+    print(in_array)
 
+    s_array = merge_sort(in_array, 0, len(in_array) - 1)
+    print('\n Debug sorted array: ')
+    for v in s_array:
+        print(v)
 
-print('\nDebug merge sort: Test 004 \n')
-print('-' * 80)
-in_array = [1, 2, 3]
-print('\nDebug: Primary array\n')
-print(in_array)
+    print('\nDebug merge sort: Test 007 \n')
+    print('-' * 80)
+    in_array = [10, 3, 2, -1, -1]
+    print('\nDebug: Primary array\n')
+    print(in_array)
 
-right = len(in_array) - 1
-left = 0
+    s_array = merge_sort(in_array, 0, len(in_array) - 1)
+    print('\n Debug sorted array: ')
+    for v in s_array:
+        print(v)
 
-print('-' * 80)
-print('\nDebug: Sorted array\n')
-print(merge_sort_SORT_GALG(in_array, left, right))
+    print('\nDebug merge sort: Test 009 \n')
+    print('-' * 80)
+    in_array = [10, 3, 2, -1, 0, 4, -3, -3, -100, -3]
+    print('\nDebug: Primary array\n')
+    print(in_array)
 
-
-print('\nDebug merge sort: Test 005 \n')
-print('-' * 80)
-in_array = [4, 3, 2, 1]
-print('\nDebug: Primary array\n')
-print(in_array)
-
-right = len(in_array) - 1
-left = 0
-
-print('-' * 80)
-print('\nDebug: Sorted array\n')
-print(merge_sort_SORT_GALG(in_array, left, right))
-
-
-print('\nDebug merge sort: Test 006 \n')
-print('-' * 80)
-in_array = [4, 3, 2, 1, 0]
-print('\nDebug: Primary array\n')
-print(in_array)
-
-right = len(in_array) - 1
-left = 0
-
-print('-' * 80)
-print('\nDebug: Sorted array\n')
-print(merge_sort_SORT_GALG(in_array, left, right))
-
-
-print('\nDebug merge sort: Test 007 \n')
-print('-' * 80)
-in_array = [1, 2, 3, 4, 5]
-print('\nDebug: Primary array\n')
-print(in_array)
-
-right = len(in_array) - 1
-left = 0
-
-print('-' * 80)
-print('\nDebug: Sorted array\n')
-print(merge_sort_SORT_GALG(in_array, left, right))
-
-print('\nDebug merge sort: Test 007 \n')
-print('-' * 80)
-in_array = [10, 3, 2, -1, -1]
-print('\nDebug: Primary array\n')
-print(in_array)
-
-right = len(in_array) - 1
-left = 0
-
-print('-' * 80)
-print('\nDebug: Sorted array\n')
-print(merge_sort_SORT_GALG(in_array, left, right))
-
-print('\nDebug merge sort: Test 008 \n')
-print('-' * 80)
-in_array = [10, 3, 2, -1, 0, 4]
-print('\nDebug: Primary array\n')
-print(in_array)
-
-right = len(in_array) - 1
-left = 0
-
-print('-' * 80)
-print('\nDebug: Sorted array\n')
-print(merge_sort_SORT_GALG(in_array, left, right))
-
-print('\nDebug merge sort: Test 009 \n')
-print('-' * 80)
-in_array = [10, 3, 2, -1, 0, 4, -3, -3, -100, -3]
-print('\nDebug: Primary array\n')
-print(in_array)
-
-right = len(in_array) - 1
-left = 0
-
-print('-' * 80)
-print('\nDebug: Sorted array\n')
-print(merge_sort_SORT_GALG(in_array, left, right))
+    s_array = merge_sort(in_array, 0, len(in_array) - 1)
+    print('\n Debug sorted array: ')
+    for v in s_array:
+        print(v)

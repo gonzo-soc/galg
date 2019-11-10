@@ -72,6 +72,31 @@ def search_value_more_than(search_array, wanted, left, right):
         return search_count_less_than(search_array, wanted, medium, right)
 
 
+def search_count_less_than(search_array, wanted, left, right):
+    if right == left:
+        if wanted < search_array[left]:
+            return 0
+        else:
+            return 1
+
+    if right - left == 1:
+        length = len(search_array)
+        if search_array[left] < wanted and search_array[right] > wanted:
+            # the count of nodes which are less than wanted
+            return right
+        elif right == length - 1:
+            if wanted > search_array[right]:
+                return length
+            else:
+                return length - 1
+
+    medium = int((left + right)/2)
+    if search_array[medium] > wanted:
+        return search_count_less_than(search_array, wanted, left, medium)
+    elif search_array[medium] < wanted:
+        return search_count_less_than(search_array, wanted, medium, right)
+
+
 def main_SORT_GALG():
     # test insertion sort
     in_array = [1, 5, 3, -1, 4, -2]
