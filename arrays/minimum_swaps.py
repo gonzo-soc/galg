@@ -1,5 +1,11 @@
 #! /usr/bin/env python3.7
 
+'''
+Minimum Swaps 2 challenge from here:
+https://www.hackerrank.com/challenges/minimum-swaps-2/
+problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=arrays
+'''
+
 
 def minimum_swaps(in_arr):
     node_to_index_map = {}
