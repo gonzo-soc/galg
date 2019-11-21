@@ -22,16 +22,15 @@ def slow_minimum_bribes(in_array):
     length = len(in_array)
     i = length - 1
 
-    isTooChaotic = False
+    is_too_chaotic = False
     # who was bribed: public officer
     po_v = None
     # current kleptocrat bribes
     br_j = 0
     # summary bribes
     br_sum = 0
-    klep_v = None
 
-    while i >= 0 and not isTooChaotic:
+    while i >= 0 and not is_too_chaotic:
 
         if po_v and po_v > in_array[i]:
             po_v = None
@@ -42,21 +41,21 @@ def slow_minimum_bribes(in_array):
             br_j = 0
             klep_v = in_array[i]
             j = i + 1
-            while j < length and not isTooChaotic:
+            while j < length and not is_too_chaotic:
                 if klep_v > in_array[j]:
                     br_j += 1
 
                 if br_j > 2:
-                    isTooChaotic = True
+                    is_too_chaotic = True
 
                 j += 1
 
-            if not isTooChaotic:
+            if not is_too_chaotic:
                 br_sum += br_j
 
         i -= 1
 
-    if isTooChaotic:
+    if is_too_chaotic:
         print("Too chaotic")
     else:
         print(br_sum)
@@ -66,7 +65,7 @@ def quick_minimum_bribes(in_array):
     length = len(in_array)
     i = length - 1
 
-    isTooChaotic = False
+    is_too_chaotic = False
     # who was bribed: public officer
     po_v = None
     # current kleptocrat bribes
@@ -80,7 +79,7 @@ def quick_minimum_bribes(in_array):
         for j in range(in_array[length - 1], length):
             kleptocrat_map[j] = 0
 
-    while i >= 0 and not isTooChaotic:
+    while i >= 0 and not is_too_chaotic:
         if po_v and po_v > in_array[i]:
             po_v = None
             if i + 1 < length - 1 and in_array[i+1] - in_array[i] >= 0:
@@ -98,11 +97,11 @@ def quick_minimum_bribes(in_array):
             j = in_array[i] - 1
             klep_v = in_array[i]
             br_j = 0
-            while j >= po_v and not isTooChaotic:
+            while j >= po_v and not is_too_chaotic:
                 if kleptocrat_map[j] == 1:
                     br_j += 1
                 if br_j > 2:
-                    isTooChaotic = True
+                    is_too_chaotic = True
                 j -= 1
 
             if br_j <= 2:
@@ -110,7 +109,7 @@ def quick_minimum_bribes(in_array):
             kleptocrat_map[klep_v] = 1
         i -= 1
 
-    if isTooChaotic:
+    if is_too_chaotic:
         print("Too chaotic")
     else:
         print(br_sum)

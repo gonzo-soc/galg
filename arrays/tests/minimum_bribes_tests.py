@@ -1,11 +1,12 @@
 #! /usr/bin/env python3.7
 
+from os import environ
 from sys import path
-path.append('..')
-path.append('.')
+
+path.append(environ['HOME'] + '/Workspace/Sys/pycharm_projs/galg/')
 
 from array import array
-from minimum_bribes import quick_minimum_bribes
+from arrays.minimum_bribes import quick_minimum_bribes
 
 
 def main():

@@ -33,7 +33,7 @@ def rotate(arr, rot):
             v = temp
 
 
-def quickRotate(arr, rot):
+def quick_rotate(arr, rot):
     rot = rot % len(arr)
     if rot == 0:
         return arr
@@ -63,7 +63,7 @@ def reverse(arr, left, right):
     return arr
 
 
-def leftRot(in_arr, in_rot):
+def left_rot(in_arr, in_rot):
     rot = in_rot % len(in_arr)
     if rot == 0:
         return in_arr

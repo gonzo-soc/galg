@@ -1,11 +1,13 @@
 #! /usr/bin/env python3.7
 
+from os import environ
 from sys import path
-path.append('..')
+
+path.append(environ['HOME'] + '/Workspace/Sys/pycharm_projs/galg/')
 path.append('.')
+path.append('..')
 
-from pattern_conv_2d_array import pattern_conv_2d_array
-
+from arrays.pattern_conv_2d_array import pattern_conv_2d_array
 
 '''
 Task from

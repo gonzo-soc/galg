@@ -1,11 +1,14 @@
 #! /usr/bin/env python3.7
 
+from os import environ
 from sys import path
-path.append('..')
-path.append('.')
 
+path.append(environ['HOME'] + '/Workspace/Sys/pycharm_projs/galg/')
+path.append('.')
+path.append('..')
+
+from arrays.left_rotation import left_rot
 from array import array
-from left_rotation import leftRot
 
 
 def main():
@@ -19,7 +22,7 @@ def main():
     print("Debug Test 007\n" + "-" * 30)
     input_arr = ' '.join(map(str, arr))
     print("Input array: {}, rotation {}".format(input_arr, rot))
-    output_arr = ' '.join(map(str, leftRot(arr, rot)))
+    output_arr = ' '.join(map(str, left_rot(arr, rot)))
     print("Rotated array: {}\n".format(output_arr))
 
     arr = array('i', [33, 47, 70, 37, 8, 53, 13, 93,
@@ -28,7 +31,7 @@ def main():
     print("Debug Test 000\n" + "-" * 30)
     input_arr = ' '.join(map(str, arr))
     print("Input array: {}, rotation {}".format(input_arr, rot))
-    output_arr = ' '.join(map(str, leftRot(arr, rot)))
+    output_arr = ' '.join(map(str, left_rot(arr, rot)))
     print("Rotated array: {}\n".format(output_arr))
 
     arr = array('i', [1, 2, 3, 4, 5, 6, 7])
@@ -37,7 +40,7 @@ def main():
     print("Debug Test 001\n" + "-" * 30)
     input_arr = ' '.join(map(str, arr))
     print("Input array: {}, rotation {}".format(input_arr, rot))
-    output_arr = ' '.join(map(str, leftRot(arr, rot)))
+    output_arr = ' '.join(map(str, left_rot(arr, rot)))
     print("Rotated array: {}\n".format(output_arr))
 
     arr = array('i', [1, 2, 3, 4, 5, 6, 7, 8])
@@ -46,7 +49,7 @@ def main():
     print("Debug Test 002\n" + "-" * 30)
     input_arr = ' '.join(map(str, arr))
     print("Input array: {}, rotation {}".format(input_arr, rot))
-    output_arr = ' '.join(map(str, leftRot(arr, rot)))
+    output_arr = ' '.join(map(str, left_rot(arr, rot)))
     print("Rotated array: {}\n".format(output_arr))
 
     arr = array('i', [1, 2, 3, 4, 5, 6, 7, 8])
@@ -55,7 +58,7 @@ def main():
     print("Debug Test 003\n" + "-" * 30)
     input_arr = ' '.join(map(str, arr))
     print("Input array: {}, rotation {}".format(input_arr, rot))
-    output_arr = ' '.join(map(str, leftRot(arr, rot)))
+    output_arr = ' '.join(map(str, left_rot(arr, rot)))
     print("Rotated array: {}\n".format(output_arr))
 
     arr = array('i', [1, 2, 3, 4, 5])
@@ -64,7 +67,7 @@ def main():
     print("Debug Test 004\n" + "-" * 30)
     input_arr = ' '.join(map(str, arr))
     print("Input array: {}, rotation {}".format(input_arr, rot))
-    output_arr = ' '.join(map(str, leftRot(arr, rot)))
+    output_arr = ' '.join(map(str, left_rot(arr, rot)))
     print("Rotated array: {}\n".format(output_arr))
 
     arr = array('i', [1, 2])
@@ -73,7 +76,7 @@ def main():
     print("Debug Test 005\n" + "-" * 30)
     input_arr = ' '.join(map(str, arr))
     print("Input array: {}, rotation {}".format(input_arr, rot))
-    output_arr = ' '.join(map(str, leftRot(arr, rot)))
+    output_arr = ' '.join(map(str, left_rot(arr, rot)))
     print("Rotated array: {}\n".format(output_arr))
 
     arr = array('i', [41, 73, 89, 7, 10, 1, 59, 58, 84, 77, 77, 97, 58, 1, 86,
@@ -83,7 +86,7 @@ def main():
     print("Debug Test 006\n" + "-" * 30)
     input_arr = ' '.join(map(str, arr))
     print("Input array: {}, rotation {}".format(input_arr, rot))
-    output_arr = ' '.join(map(str, leftRot(arr, rot)))
+    output_arr = ' '.join(map(str, left_rot(arr, rot)))
     print("Rotated array: {}\n".format(output_arr))
 
 
