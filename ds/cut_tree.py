@@ -6,10 +6,11 @@ Build a tree of cuts based on input length: can be useful for non-recursion vers
 
 Example 001.
 Length = 4
-    0, 4
+    1, 4
     /   |
- 0, 1  2, 3
+ 1, 2  3, 4
 '''
+
 
 def init_tree(length):
     out_tree = {}
