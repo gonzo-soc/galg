@@ -17,7 +17,7 @@ class BinTree:
 
     def insert(self, in_key_v):
         curr_node = self.root
-        new_node = Node(in_key_v, self.root)
+        new_node = Node(in_key_v)
         while curr_node:
             if in_key_v < curr_node.key_v:
                 if curr_node.left is None:
