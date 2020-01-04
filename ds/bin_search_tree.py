@@ -1,38 +1,41 @@
-class Node:
-
-    def __init__(self, in_key_v, parent=None):
-        self.key_v = in_key_v
-        self.parent = parent
-        self.left = None
-        self.right = None
+from .tree_node import Node
+from .tree import Tree
 
 
-class BinTree:
+class BinTree(Tree):
 
-    def __init__(self, in_array):
-        self.root = Node(in_array[0])
+    def __init__(self, root_node):
+        self.root = root_node
 
-        for i in range(1, len(in_array)):
-            self.insert(in_array[i])
+    @staticmethod
+    def create_node(in_key_v, parent=None):
+        return Node(in_key_v, parent)
 
-    def insert(self, in_key_v):
+    def insert(self, new_node):
         curr_node = self.root
-        new_node = Node(in_key_v)
+        new_key_v = new_node.get_key()
         while curr_node:
-            if in_key_v < curr_node.key_v:
+            if new_key_v < curr_node.key_v:
                 if curr_node.left is None:
                     curr_node.left = new_node
                     break
                 else:
                     curr_node = curr_node.left
-            elif in_key_v > curr_node.key_v:
+            elif new_key_v > curr_node.key_v:
                 if curr_node.right is None:
                     curr_node.right = new_node
                     break
                 else:
                     curr_node = curr_node.right
 
-        new_node.parent = curr_node
+        new_node.set_parent(curr_node)
+        return new_node
+
+    def get_root(self):
+        return self.root
+
+    def set_root(self, new_root):
+        self.root = new_root
 
     def __after_that(self, less_than_key):
         successor = None
@@ -86,15 +89,6 @@ class BinTree:
                 rem_node.right = after_rem_node.right
                 after_rem_node.right.parent = rem_node
 
-    @staticmethod
-    def __centered_walk(root):
-        if root.left is not None:
-            BinTree.__centered_walk(root.left)
-        print(root.key_v, end=" ")
-        if root.right is not None:
-            BinTree.__centered_walk(root.right)
+        return parent_node
 
-    def centered_walk(self):
-        root_node = self.root
-        BinTree.__centered_walk(root_node)
 

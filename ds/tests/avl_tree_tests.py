@@ -7,14 +7,14 @@ path.append(environ['HOME'] + '/Workspace/Sys/pycharm_projs/galg/')
 path.append('.')
 path.append('..')
 
-from ds.bin_search_tree import *
+from ds.avl_tree import *
 from ds.tree import TreeWalker
 
 if __name__ == '__main__':
-    in_array = [7, 5, 6, 4, 2, 3, 14, 10, 9, 11, 15, 16, 13]
+    in_array = [8, 9, 6, 5, 4, 7]
     length = len(in_array)
 
-    tree = BinTree(BinTree.create_node(in_array[0]))
+    tree = AVLTree(AVLTree.create_node(in_array[0]))
     for i in range(1, len(in_array)):
         tree.insert(tree.create_node(in_array[i]))
 
