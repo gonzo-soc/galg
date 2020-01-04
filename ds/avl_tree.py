@@ -61,25 +61,31 @@ class AVLTree(Tree):
     def __balance__(self, new_node):
         parent = new_node.get_parent()
         child = new_node
+        is_rotate = False
 
         while parent is not None:
             # left rotation
             if parent.get_diff() == 2:
+                is_rotate = True
                 right_child = parent.get_right()
                 # big left rotation
                 if right_child.get_diff() < 0:
-                    parent = self.__right_rotation__(right_child)
+                    self.__right_rotation__(right_child)
                 parent = self.__left_rotation__(parent)
             # right rotation
             elif parent.get_diff() == -2:
+                is_rotate = True
                 left_child = parent.get_left()
                 # big right rotation
                 if left_child.get_diff() > 0:
-                    parent = self.__left_rotation__(left_child)
+                    self.__left_rotation__(left_child)
                 parent = self.__right_rotation__(parent)
+            else:
+                child = parent
+                parent = child.get_parent()
 
-            child = parent
-            parent = child.get_parent()
+            if is_rotate and parent:
+                AVLTree.__update_height__(parent)
 
         return child
 
@@ -92,7 +98,7 @@ class AVLTree(Tree):
             parent.set_right(left_right_child)
             left_right_child.set_parent(parent)
         else:
-            parent.get_right(None)
+            parent.set_right(None)
 
         if grand_pa is not None:
             right_child.set_parent(grand_pa)
@@ -105,7 +111,6 @@ class AVLTree(Tree):
         parent.set_parent(right_child)
         right_child.set_parent(grand_pa)
         AVLTree.__update_height__(parent)
-        AVLTree.__update_height__(right_child)
 
         return right_child
 
@@ -145,6 +150,8 @@ class AVLTree(Tree):
         parent.set_parent(left_child)
         left_child.set_parent(grand_pa)
         AVLTree.__update_height__(parent)
-        AVLTree.__update_height__(left_child)
 
         return left_child
+
+    def get_root(self):
+        return self.bin_tree.get_root()
