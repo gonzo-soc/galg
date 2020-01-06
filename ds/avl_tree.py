@@ -57,48 +57,64 @@ class AVLTree(Tree):
 
         parent_node = rem_node.parent
         start_balance_node = parent_node
-        if rem_node.left is None and rem_node.right is None:
-            if parent_node.left == rem_node:
-                parent_node.left = None
-            else:
-                parent_node.right = None
-        elif rem_node.left and rem_node.right is None:
-            if parent_node.left == rem_node:
-                parent_node.left = rem_node.left
-                rem_node.left.parent = parent_node
-            else:
-                parent_node.right = rem_node.left
-                rem_node.left.parent = parent_node
-        elif rem_node.right and rem_node.left is None:
-            if parent_node.left == rem_node:
-                parent_node.left = rem_node.right
-                rem_node.right.parent = parent_node
-            else:
-                parent_node.right = rem_node.right
-                rem_node.right.parent = parent_node
-        else:
+        if parent_node is not None and (rem_node.left is None or rem_node.right is None):
+            if rem_node.left is None and rem_node.right is None:
+                if parent_node.left == rem_node:
+                    parent_node.left = None
+                else:
+                    parent_node.right = None
+            elif rem_node.left and rem_node.right is None:
+                if parent_node.left == rem_node:
+                    parent_node.left = rem_node.left
+                    rem_node.left.parent = parent_node
+                else:
+                    parent_node.right = rem_node.left
+                    rem_node.left.parent = parent_node
+            elif rem_node.right and rem_node.left is None:
+                if parent_node.left == rem_node:
+                    parent_node.left = rem_node.right
+                    rem_node.right.parent = parent_node
+                else:
+                    parent_node.right = rem_node.right
+                    rem_node.right.parent = parent_node
+        elif rem_node.left is not None and rem_node.right is not None:
             min_after_key = self.bin_tree.find_min_after(key_v)
             if min_after_key.parent != rem_node:
+                # the height won't be changed
+                if min_after_key.parent.left is not None and min_after_key.parent.right is not None:
+                    start_balance_node = min_after_key
+                else:
+                    start_balance_node = min_after_key.parent
+
                 if min_after_key.right is not None:
                     min_after_key.parent.left = min_after_key.right
                     min_after_key.right.parent = min_after_key.parent
                 else:
                     min_after_key.parent.left = None
+
                 min_after_key.right = rem_node.right
                 rem_node.right.parent = min_after_key
-                start_balance_node = min_after_key.parent
             else:
                 start_balance_node = min_after_key
 
-            if parent_node.left == rem_node:
-                parent_node.left = min_after_key
-            else:
-                parent_node.right = min_after_key
-
             min_after_key.parent = rem_node.parent
-            if rem_node.left is not None:
-                min_after_key.left = rem_node.left
-                rem_node.left.parent = min_after_key
+            min_after_key.left = rem_node.left
+            rem_node.left.parent = min_after_key
+
+            # if the removing node is not root
+            if parent_node is not None:
+                if parent_node.left == rem_node:
+                    parent_node.left = min_after_key
+                else:
+                    parent_node.right = min_after_key
+            else:
+                self.bin_tree.set_root(min_after_key)
+        elif rem_node.left is None:
+            self.bin_tree.set_root(rem_node.right)
+            start_balance_node = rem_node.right
+        else:
+            self.bin_tree.set_root(rem_node.left)
+            start_balance_node = rem_node.left
 
         self.__balance__(start_balance_node)
 
@@ -204,5 +220,5 @@ class AVLTree(Tree):
 
         return old_height != in_node.get_height()
 
-    def get_root(self):
+    def get_root(self) -> object:
         return self.bin_tree.get_root()
