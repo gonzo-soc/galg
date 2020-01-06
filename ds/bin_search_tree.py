@@ -37,7 +37,7 @@ class BinTree(Tree):
     def set_root(self, new_root):
         self.root = new_root
 
-    def __after_that(self, less_than_key):
+    def find_min_after(self, less_than_key):
         successor = None
         current = self.root
         while current:
@@ -75,19 +75,27 @@ class BinTree(Tree):
                 rem_node.right.parent = parent_node
             else:
                 parent_node.right = rem_node.right
-                rem_node.left.parent = parent_node
+                rem_node.right.parent = parent_node
         else:
-            after_rem_node = self.__after_that(key_v)
-            rem_node.key_v = after_rem_node.key_v
-            if after_rem_node.parent != rem_node:
-                if after_rem_node.right is not None:
-                    after_rem_node.parent.left = after_rem_node.right
-                    after_rem_node.right = after_rem_node.parent
+            min_after_key = self.bin_tree.find_min_after(key_v)
+            if min_after_key.parent != rem_node:
+                if min_after_key.right is not None:
+                    min_after_key.parent.left = min_after_key.right
+                    min_after_key.right.parent = min_after_key.parent
                 else:
-                    after_rem_node.parent.left = None
+                    min_after_key.parent.left = None
+                min_after_key.right = rem_node.right
+                rem_node.right.parent = min_after_key
+
+            if parent_node.left == rem_node:
+                parent_node.left = min_after_key
             else:
-                rem_node.right = after_rem_node.right
-                after_rem_node.right.parent = rem_node
+                parent_node.right = min_after_key
+
+            min_after_key.parent = rem_node.parent
+            if rem_node.left is not None:
+                min_after_key.left = rem_node.left
+                rem_node.left.parent = min_after_key
 
         return parent_node
 

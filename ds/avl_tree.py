@@ -44,50 +44,100 @@ class AVLTree(Tree):
 
     def insert(self, new_node):
         new_node = self.bin_tree.insert(new_node)
-        self.__increment_height__(new_node)
-        new_root = self.__balance__(new_node)
-        self.bin_tree.set_root(new_root)
-
-    @staticmethod
-    def __increment_height__(new_node):
         parent = new_node.get_parent()
-        child = new_node
-        while parent is not None:
-            if parent.get_height() == child.get_height():
-                parent.increment_height()
-            child = parent
-            parent = parent.get_parent()
+        self.__balance__(parent)
 
-    def __balance__(self, new_node):
-        parent = new_node.get_parent()
-        child = new_node
-        is_rotate = False
+    def remove(self, key_v):
+        rem_node = self.get_root()
+        while rem_node and rem_node.key_v != key_v:
+            if key_v < rem_node.key_v:
+                rem_node = rem_node.left
+            elif key_v > rem_node.key_v:
+                rem_node = rem_node.right
 
-        while parent is not None:
+        parent_node = rem_node.parent
+        start_balance_node = parent_node
+        if rem_node.left is None and rem_node.right is None:
+            if parent_node.left == rem_node:
+                parent_node.left = None
+            else:
+                parent_node.right = None
+        elif rem_node.left and rem_node.right is None:
+            if parent_node.left == rem_node:
+                parent_node.left = rem_node.left
+                rem_node.left.parent = parent_node
+            else:
+                parent_node.right = rem_node.left
+                rem_node.left.parent = parent_node
+        elif rem_node.right and rem_node.left is None:
+            if parent_node.left == rem_node:
+                parent_node.left = rem_node.right
+                rem_node.right.parent = parent_node
+            else:
+                parent_node.right = rem_node.right
+                rem_node.right.parent = parent_node
+        else:
+            min_after_key = self.bin_tree.find_min_after(key_v)
+            if min_after_key.parent != rem_node:
+                if min_after_key.right is not None:
+                    min_after_key.parent.left = min_after_key.right
+                    min_after_key.right.parent = min_after_key.parent
+                else:
+                    min_after_key.parent.left = None
+                min_after_key.right = rem_node.right
+                rem_node.right.parent = min_after_key
+                start_balance_node = min_after_key.parent
+            else:
+                start_balance_node = min_after_key
+
+            if parent_node.left == rem_node:
+                parent_node.left = min_after_key
+            else:
+                parent_node.right = min_after_key
+
+            min_after_key.parent = rem_node.parent
+            if rem_node.left is not None:
+                min_after_key.left = rem_node.left
+                rem_node.left.parent = min_after_key
+
+        self.__balance__(start_balance_node)
+
+    def __balance__(self, parent):
+        child = parent
+        is_root_rotation = False
+        while parent is not None and AVLTree.__update_height__(parent):
+            if (parent.get_diff() == -2 or parent.get_diff() == 2) and parent == self.get_root():
+                is_root_rotation = True
+
             # left rotation
             if parent.get_diff() == 2:
-                is_rotate = True
                 right_child = parent.get_right()
                 # big left rotation
                 if right_child.get_diff() < 0:
                     self.__right_rotation__(right_child)
-                parent = self.__left_rotation__(parent)
+                    AVLTree.__update_height__(right_child)
+                    AVLTree.__update_height__(right_child.get_parent())
+
+                self.__left_rotation__(parent)
             # right rotation
             elif parent.get_diff() == -2:
-                is_rotate = True
                 left_child = parent.get_left()
                 # big right rotation
                 if left_child.get_diff() > 0:
                     self.__left_rotation__(left_child)
-                parent = self.__right_rotation__(parent)
+                    AVLTree.__update_height__(left_child)
+                    AVLTree.__update_height__(left_child.get_parent())
+
+                self.__right_rotation__(parent)
             else:
                 child = parent
-                parent = child.get_parent()
+                parent = parent.get_parent()
 
-            if is_rotate and parent:
-                AVLTree.__update_height__(parent)
-
-        return child
+        if is_root_rotation:
+            if parent is not None:
+                self.bin_tree.set_root(parent)
+            else:
+                self.bin_tree.set_root(child)
 
     @staticmethod
     def __left_rotation__(parent):
@@ -110,23 +160,8 @@ class AVLTree(Tree):
         right_child.set_left(parent)
         parent.set_parent(right_child)
         right_child.set_parent(grand_pa)
-        AVLTree.__update_height__(parent)
 
         return right_child
-
-    @staticmethod
-    def __update_height__(in_node):
-        left_height = -1
-        if in_node.get_left() is not None:
-            left_height = in_node.get_left().get_height()
-        right_height = -1
-        if in_node.get_right() is not None:
-            right_height = in_node.get_right().get_height()
-
-        if left_height > right_height:
-            in_node.set_height(left_height + 1)
-        else:
-            in_node.set_height(right_height + 1)
 
     @staticmethod
     def __right_rotation__(parent):
@@ -149,9 +184,25 @@ class AVLTree(Tree):
         left_child.set_right(parent)
         parent.set_parent(left_child)
         left_child.set_parent(grand_pa)
-        AVLTree.__update_height__(parent)
 
         return left_child
+
+    @staticmethod
+    def __update_height__(in_node):
+        old_height = in_node.get_height()
+        left_height = -1
+        if in_node.get_left() is not None:
+            left_height = in_node.get_left().get_height()
+        right_height = -1
+        if in_node.get_right() is not None:
+            right_height = in_node.get_right().get_height()
+
+        if left_height > right_height:
+            in_node.set_height(left_height + 1)
+        elif right_height >= left_height:
+            in_node.set_height(right_height + 1)
+
+        return old_height != in_node.get_height()
 
     def get_root(self):
         return self.bin_tree.get_root()
