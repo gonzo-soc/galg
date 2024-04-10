@@ -11,49 +11,77 @@ from typing import List
 
 
 class TestLeastInterval(unittest.TestCase):
-    def test_idle(self):
-        tasks: List[str] = ["A", "A", "A", "B", "B", "B"]
-        n: int = 2
+    # def test_oneByOne(self):
+    #     tasks: List[str] = ["A", "C", "A", "B", "D", "B"]
+    #     n: int = 1
+    #     print("Tasks: {}, interval: {}".format(tasks, n))
+    #     self.assertEqual(leastInterval(tasks, n), 6)
+
+    # def test_idle(self):
+    #     tasks: List[str] = ["A", "A", "A", "B", "B", "B"]
+    #     n: int = 2
+    #     print("Tasks: {}, interval: {}".format(tasks, n))
+    #     self.assertEqual(leastInterval(tasks, n), 8)
+
+    # def test_doubleIdle(self):
+    #     tasks: List[str] = ["A", "A", "A", "B", "B", "B"]
+    #     n: int = 3
+    #     print("Tasks: {}, interval: {}".format(tasks, n))
+    #     self.assertEqual(leastInterval(tasks, n), 10)
+
+    # def test_complexOne(self):
+    #     tasks: List[str] = ["A", "B", "C", "D", "E", "A", "B", "C", "D", "E"]
+    #     n: int = 4
+    #     print("Tasks: {}, interval: {}".format(tasks, n))
+    #     self.assertEqual(leastInterval(tasks, n), 10)
+
+    def test_complexTwo(self):
+        tasks: List[str] = ["A", "A", "A", "A", "A", "A", "B", "C", "D", "E", "F", "G"]
+        n: int = 1
         print("Tasks: {}, interval: {}".format(tasks, n))
-        self.assertEqual(leastInterval(tasks, n), 8)
+        self.assertEqual(leastInterval(tasks, n), 12)
 
-def leastInterval(tasks: List[str], n: int) -> int:
-    '''
-    '''
-    resultList = [tasks[0]]
-    tasksCopy = tasks.copy()
-    tasksCopy[0] = -1
+    # def test_complexThree(self):
+    #     tasks: List[str] = ["A", "A", "A", "B", "B", "B", "C", "C", "C", "D", "D", "E"]
+    #     n: int = 2
+    #     print("Tasks: {}, interval: {}".format(tasks, n))
+    #     self.assertEqual(leastInterval(tasks, n), 12)
 
-    j = 1
+
+def leastInterval(taskQueue: List[str], n: int) -> int:
+    """ """
+    if n == 0:
+        return len(taskQueue)
+
+    resultList = [taskQueue[0]]
+    del taskQueue[0]
+    
+    taskQueue.sort()
     i = 1
-    processed = 1
-    canSet = True
-
-    while processed != len(tasks):
-        while tasksCopy[i] == -1:
-            i += 1
-
-        k = 1
-        idle = False
-        canSet = True
-        while k < n and j - k >= 0:
-            if resultList[j - k] == tasks[i]:
-                canSet = False
-            k += 1
-        if canSet:
-            resultList.append(tasks[i])
-            tasksCopy[i] = -1
-            processed += 1
-
-        i += 1
-        if i == len(tasks):
+    j = 1
+    k = 0
+    
+    while (len(taskQueue) > 0):
+        while(taskQueue[i] == resultList[j] and i < len(taskQueue)):
+            i+=1
+        
+        if i == len(taskQueue):
             i = 0
-            if not canSet:
-                idle = True
+        else: 
+            k = 0
+            canSet = True
+            while canSet and k < n and j - k >= 0:
+                if taskQueue[i] == resultList[j - k]:
+                    canSet = False
+                k+=1
+            if (canSet):    
+                resultList.append(taskQueue[i])
+                del taskQueue[i]
+                i+=1
+            else:
                 resultList.append("idle")
-        if idle or canSet:
-            j += 1
-
+            j+=1
+        
     return len(resultList)
 
 
