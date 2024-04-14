@@ -60,7 +60,9 @@ class TestLeastInterval(unittest.TestCase):
         self.assertEqual(leastInterval(tasks, n), 12)
 
 
-def findMaxGroupAfter(taskQueue: List[str], max_repeat: int, start_i: int):
+def findTaskGroupEqualOrLessSize(
+    taskQueue: List[str], equalOrLessGrSize: int, prev_stop_i: int
+):
     """
     Find max repeat group after another:
         A,A,A,D,A,B,B,C,B,C:
@@ -70,65 +72,70 @@ def findMaxGroupAfter(taskQueue: List[str], max_repeat: int, start_i: int):
     """
     if len(taskQueue) == 1:
         return "{}:{}".format(0, 1)
-    i = start_i + 1 if start_i > 0 and start_i + 1 < len(taskQueue) else start_i
+    i = (
+        prev_stop_i + 1
+        if prev_stop_i > 0 and prev_stop_i + 1 < len(taskQueue)
+        else prev_stop_i
+    )
 
     stop_i = i
-    curr_repeat = 1
-    max_repeat_after = 0
+    curr_size = result_gr_size = 1
     while i + 1 < len(taskQueue):
         if taskQueue[i] == taskQueue[i + 1]:
-            curr_repeat += 1
-        if max_repeat_after < curr_repeat and max_repeat_after <= max_repeat:
-            max_repeat_after = curr_repeat
+            curr_size += 1
+        if result_gr_size < curr_size and result_gr_size <= equalOrLessGrSize:
+            result_gr_size = curr_size
             stop_i = (
                 i + 1
                 if (taskQueue[i] == taskQueue[i + 1] and i + 1 < len(taskQueue))
                 else i
             )
         if taskQueue[i] != taskQueue[i + 1]:
-            curr_repeat = 1
+            curr_size = 1
         i += 1
 
-    return "{}:{}".format(stop_i, max_repeat_after)
+    return "{}:{}".format(stop_i, result_gr_size)
 
 
 def leastInterval(taskQueue: List[str], n: int) -> int:
     """ """
     if n == 0 or len(taskQueue) == 1:
         return len(taskQueue)
-    i = 0
+    stop_i = 0
     j = 0
     k = 0
-    max_r = 65536
+    equal_or_less_gr_size = 65536
     taskQueue.sort()
-    resultList = [taskQueue[i]]
-    del taskQueue[i]
+    resultList = [taskQueue[stop_i]]
+    del taskQueue[stop_i]
     while len(taskQueue) > 0:
-        i, max_r = findMaxGroupAfter(taskQueue, max_r, i).split(":")
-        i = int(i)
-        max_r = int(max_r)
+        stop_i, equal_or_less_gr_size = findTaskGroupEqualOrLessSize(
+            taskQueue, equal_or_less_gr_size, stop_i
+        ).split(":")
+        stop_i = int(stop_i)
+        equal_or_less_gr_size = int(equal_or_less_gr_size)
         k = 0
         canSet = True
         while len(resultList) > 0 and canSet and k < n and j - k >= 0:
-            if taskQueue[i] == resultList[j - k]:
+            if taskQueue[stop_i] == resultList[j - k]:
                 canSet = False
             k += 1
         if canSet:
-            resultList.append(taskQueue[i])
-            del taskQueue[i]
-            i = i - 1 if i > 0 else i
+            resultList.append(taskQueue[stop_i])
+            del taskQueue[stop_i]
+            stop_i = stop_i - 1 if stop_i > 0 else stop_i
         else:
-            if i + 1 >= len(taskQueue):
+            if stop_i + 1 >= len(taskQueue):
                 resultList.append("idle")
 
-        if i + 1 >= len(taskQueue) or canSet:
+        if stop_i + 1 >= len(taskQueue) or canSet:
             j += 1
-        if i + 1 >= len(taskQueue):
-            max_r = 65536
-            i = 0
+        if stop_i + 1 >= len(taskQueue):
+            equal_or_less_gr_size = 65536
+            stop_i = 0
         else:
-            if len(taskQueue) == 2 and not canSet and i == 0:
-                i = 1
+            if len(taskQueue) == 2 and not canSet and stop_i == 0:
+                stop_i = 1
     return len(resultList)
 
 
